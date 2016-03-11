@@ -1,0 +1,50 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Notificaciones">
+
+        <CheckBoxPreference
+            android:key="checkbox_preference"
+            android:title="Habilitar notificaciones"
+            android:summary="Recibir notificaciones de nuevas apps."
+            android:defaultValue="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Sitios de interés">
+
+        <PreferenceScreen
+            android:title="www.franciscogiraldo.com"
+            android:summary="Sitio personal de Francisco Giraldo">
+
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.franciscogiraldo.com" />
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Legal">
+
+        <PreferenceScreen
+            android:key="terminos"
+            android:title="Términos y Condiciones" >
+
+            <intent android:action="action.terminos"  />
+
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="acercade"
+            android:title="Acerca De" >
+
+            <intent android:action="action.acercade"  />
+
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="window_background">#FFF5F5F5</color>
+
+    <color name="primaryColor">#192131</color>
+    <color name="primaryDarkColor">#1d202b</color>
+    <color name="accentColor">#52a3cc</color>
+
+    <!--tabs color-->
+    <item name="blue_dark" type="color">#1d202b</item>
+    <!--tabs indicator color-->
+    <item name="blue_marine" type="color">#52a3cc</item>
+
+    <!--action bar color - Start gradient-->
+    <item name="blue_dark2" type="color">#1d202b</item>
+    <!--action bar color - Center gradient -->
+    <item name="blue_dark3" type="color">#192131</item>
+    <!--action bar color - End gradient -->
+    <item name="blue_light" type="color">#2D395A</item>
+
+    <item name="white" type="color">#FFFFFF</item>
+    <item name="black" type="color">#000000</item>
+    <item name="black_light" type="color">#303030</item>
+    <item name="gray" type="color">#424242</item>
+    <item name="transparent" type="color">#80000000</item>
+
+    <!--slider indicator colors-->
+    <item name="gray2" type="color">#b4b4b4</item>
+    <item name="gray2_opacity" type="color">#88b4b4b4</item>
+
+    <!--descuentos background-->
+    <item name="gray3" type="color">#E8E8E8</item>
+
+    <!--Lists divider-->
+    <item name="gray4" type="color">#CCCCCC</item>
+    <item name="white2" type="color">#F9F9F9</item>
+
+    <item name="categoria1_start" type="color">#6cae4d</item>
+    <item name="categoria1_end" type="color">#2e7717</item>
+    <item name="categoria2_start" type="color">#3f3e98</item>
+    <item name="categoria2_end" type="color">#100f5b</item>
+    <item name="categoria3_start" type="color">#db771c</item>
+    <item name="categoria3_end" type="color">#bc3803</item>
+    <item name="categoria4_start" type="color">#b52527</item>
+    <item name="categoria4_end" type="color">#800506</item>
+    <item name="categoria5_start" type="color">#f2cb00</item>
+    <item name="categoria5_end" type="color">#e6a200</item>
+    <item name="categoria6_start" type="color">#619dbb</item>
+    <item name="categoria6_end" type="color">#256189</item>
+    <item name="categoria7_start" type="color">#b43188</item>
+    <item name="categoria7_end" type="color">#7f0949</item>
+    <item name="categoria8_start" type="color">#103269</item>
+    <item name="categoria8_end" type="color">#010a2b</item>
+
+
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <ImageView
+        android:background="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/grability_logo"
+        android:contentDescription="Main Logo"
+        android:id="@+id/imageView"
+        android:minHeight="150dp"
+        android:minWidth="150dp" />
+
+
+
+</RelativeLayout>

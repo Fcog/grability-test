@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/descuento_interna_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layout_margin="4dp"
+    tools:context="com.elpais.app.clubselecta.DescuentoActivity">
+
+    <RelativeLayout
+        android:id="@+id/app_interna_top"
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/imagen"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="30dp"/>
+
+        <TextView
+            android:id="@+id/text_precio"
+            style="@style/text_app_precio"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="15sp"
+            android:width="60dp"
+            android:height="60dp"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="25dp"
+        android:layout_below="@+id/app_interna_top">
+
+        <TextView
+            android:text="HOLA"
+            android:id="@+id/text_titulo"
+            style="@style/text_app_titulo"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/imagen_favorito"
+            android:layout_toStartOf="@+id/imagen_favorito" />
+
+        <ImageView
+            android:id="@+id/imagen_favorito"
+            android:src="@drawable/ic_addfavoritos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_alignTop="@+id/text_titulo"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:clickable="true"/>
+    </RelativeLayout>
+
+</RelativeLayout>

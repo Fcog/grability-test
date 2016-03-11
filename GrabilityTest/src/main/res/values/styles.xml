@@ -1,0 +1,50 @@
+<resources>
+
+    <style name="AppTheme" parent="Crunch.Base" />
+
+    <style name="Crunch.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/accentColor</item>
+
+        <item name="colorButtonNormal">@color/accentColor</item>
+    </style>
+
+    <style name="FullScreen" parent="@style/Theme.AppCompat">
+        <item name="android:colorBackground">@color/blue_dark</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    <!-- %%%%%%%%%%%%%%%%%%%% My view styles %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%-->
+    <style name="text_app_titulo">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="text_app_descripcion">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:layout_alignParentLeft">true</item>
+    </style>
+
+    <style name="text_app_precio">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/circulo_descuento</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>

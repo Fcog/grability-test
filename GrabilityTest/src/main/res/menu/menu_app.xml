@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.franciscogiraldo.fcog.grability.ui.activity.PromocionActivity">
+
+    <item android:id="@+id/action_favoritos"
+        android:title="@string/action_favoritos"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"  />
+
+    <item android:id="@+id/action_share"
+        android:title="@string/action_share"
+        android:icon="@drawable/ic_compartir"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"  />
+</menu>

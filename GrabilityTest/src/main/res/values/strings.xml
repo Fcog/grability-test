@@ -1,0 +1,86 @@
+<resources>
+    <string name="app_name">Grability Test</string>
+    <string name="app_name_uppercase">GRABILITY TEST</string>
+    <string name="activity_titulo_app">App</string>
+    <string name="activity_titulo_favoritos">Favoritos</string>
+    <string name="activity_titulo_alertas">Novedades</string>
+    <string name="activity_titulo_settings">Configuración</string>
+    <string name="activity_titulo_terminos">Términos y Condiciones</string>
+    <string name="activity_titulo_acercade">Acerca de la aplicación</string>
+
+
+    <string name="action_settings">Configuración</string>
+    <string name="action_favoritos">Favoritos</string>
+    <string name="action_alerta">Alertas</string>
+    <string name="action_share">Compartir</string>
+
+    <string name="precio_gratis">Gratis</string>
+    <string name="descuento_hint">0</string>
+    <string name="text_label_telefono">Teléfono:</string>
+
+    <string name="aviso_descargar_datos">Cargando información.</string>
+    <string name="aviso_no_hay_promo_nuevas">No hay apps nuevas en el momento.</string>
+    <string name="aviso_no_hay_promo_categoria">No hay apps para esta categoría.</string>
+    <string name="aviso_no_hay_favoritos">No has marcado ninguna app como favorita.</string>
+
+    <string name="error_descargar_datos">Hubo problemas descargando los datos. Por favor revisa tu conexión a Internet.</string>
+
+    <string name="account_type">com.franciscogiraldo.grability.account</string>
+    <string name="provider_authority">com.franciscogiraldo.grability</string>
+
+    <string name="registering_message">Generating InstanceID token...</string>
+    <string name="notificacion_simple_titulo">Nueva app</string>
+
+    <string-array name="categorias">
+        <item>Todos</item>
+        <item>Games</item>
+        <item>Photo &amp; Video</item>
+        <item>Social Networking</item>
+        <item>Music</item>
+        <item>Education</item>
+        <item>Entertainment</item>
+        <item>Navigation</item>
+        <item>Utilities</item>
+    </string-array>
+
+    <string name="terminos">
+        <![CDATA[
+        <h2>Lorem ipsum dolor sit amet</h2>
+        <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <h2>Lorem ipsum dolor sit amet</h2>
+        <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
+        ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        ]]>
+    </string>
+
+    <string name="acercade">
+    <![CDATA[
+    <h2>Programador</h2>
+    <p>Francisco Giraldo</p>
+    <p>fcog111@gmail.com</p>
+    <p>www.franciscogiraldo.com</p>
+    ]]>
+    </string>
+
+</resources>
