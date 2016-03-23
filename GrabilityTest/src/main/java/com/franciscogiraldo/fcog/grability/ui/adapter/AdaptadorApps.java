@@ -18,7 +18,7 @@ import com.franciscogiraldo.fcog.grability.R;
 import com.franciscogiraldo.fcog.grability.ui.activity.AppActivity;
 import com.franciscogiraldo.fcog.grability.utils.Constantes;
 import com.franciscogiraldo.fcog.grability.utils.VolleySingleton;
-import com.franciscogiraldo.fcog.grability.web.App;
+import com.franciscogiraldo.fcog.grability.web.App2;
 
 /**
  * Created by fcog on 9/11/15.
@@ -147,7 +147,7 @@ public class AdaptadorApps extends RecyclerView.Adapter<AdaptadorApps.AppViewHol
 
                 int app_id = Integer.parseInt(v.getTag().toString());
 
-                App app = new App(contentResolver, app_id);
+                App2 app = new App2(contentResolver, app_id);
 
                 app.AddFavorito(contentResolver);
             }

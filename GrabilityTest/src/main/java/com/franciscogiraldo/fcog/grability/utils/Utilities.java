@@ -1,8 +1,11 @@
 package com.franciscogiraldo.fcog.grability.utils;
 
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 
-public class Utilidades {
+import com.franciscogiraldo.fcog.grability.R;
+
+public class Utilities {
 
 
     /**

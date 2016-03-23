@@ -1,6 +1,5 @@
 package com.franciscogiraldo.fcog.grability.utils;
 
-import com.franciscogiraldo.fcog.grability.provider.GrabilityContract;
 
 /**
  * Created by fcog on 9/11/15.
@@ -31,21 +30,6 @@ public class Constantes {
     /**
      * Proyección para las consultas
      */
-    public static final String[] PROJECTION = new String[]{
-            GrabilityContract.Columnas._ID,
-            GrabilityContract.Columnas.APP_ID,
-            GrabilityContract.Columnas.TITULO,
-            GrabilityContract.Columnas.IMAGEN,
-            GrabilityContract.Columnas.DESCRIPCION,
-            GrabilityContract.Columnas.CATEGORIA,
-            GrabilityContract.Columnas.ENLACE,
-            GrabilityContract.Columnas.PRECIO,
-            GrabilityContract.Columnas.NUEVA,
-            GrabilityContract.Columnas.FAVORITA
-    };
-
-
-    // Indices para las columnas indicadas en la proyección
     public static final int COLUMNA_APP_ID = 1;
     public static final int COLUMNA_TITULO = 2;
     public static final int COLUMNA_IMAGEN = 3;
@@ -64,7 +48,7 @@ public class Constantes {
 
     public static final String CONFIG_NOTIFICACIONES = "checkbox_preference";
 
-    public static final String PRIMERA_VEZ = "primera_vez";
+    public static final String FIRST_TIME = "primera_vez";
     public static final String DEFAULT_VIEW = "default_view";
     public static final int LIST = 0;
     public static final int GRID = 1;

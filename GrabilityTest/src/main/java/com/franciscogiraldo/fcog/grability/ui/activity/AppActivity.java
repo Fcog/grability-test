@@ -1,7 +1,11 @@
 package com.franciscogiraldo.fcog.grability.ui.activity;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -14,14 +18,18 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.franciscogiraldo.fcog.grability.R;
+import com.franciscogiraldo.fcog.grability.db.App;
+import com.franciscogiraldo.fcog.grability.db.AppContentProvider;
+import com.franciscogiraldo.fcog.grability.db.AppDao;
+import com.franciscogiraldo.fcog.grability.db.DaoMaster;
+import com.franciscogiraldo.fcog.grability.db.DaoSession;
 import com.franciscogiraldo.fcog.grability.utils.VolleySingleton;
-import com.franciscogiraldo.fcog.grability.web.App;
+import com.franciscogiraldo.fcog.grability.web.App2;
 
 /**
  * Created by fcog on 9/15/15.
@@ -30,6 +38,11 @@ public class AppActivity extends AppCompatActivity {
 
     App app;
     int app_id;
+
+    private SQLiteDatabase db;
+    private DaoMaster daoMaster;
+    private DaoSession daoSession;
+    private AppDao appDao;
 
     private ShareActionProvider mShareActionProvider;
 
@@ -126,7 +139,7 @@ public class AppActivity extends AppCompatActivity {
             case R.id.action_favoritos:
 
                 Log.i("FAVORITO ID", "Programando favorito del app: " + app_id);
-                App app = new App(getContentResolver(), app_id);
+                App app = new App();
                 app.AddFavorito(getContentResolver());
 
                 MenuItem favorito_item = menu.findItem(R.id.action_favoritos);
@@ -164,5 +177,22 @@ public class AppActivity extends AppCompatActivity {
     public void onBackPressed(){
         super.onBackPressed();
         overridePendingTransition(R.anim.activity_back_in, R.anim.activity_back_out);
+    }
+
+    public void AddFavorito(ContentResolver resolver){
+
+        // Consultar registros locales actuales de puntos
+        Uri existingUriPunto = AppContentProvider.CONTENT_URI.buildUpon().appendPath(String.valueOf(this.app_id)).build();
+
+        ContentValues values = new ContentValues();
+
+        if (this.getFavorite() == 0){
+            values.put(this.getFavorite(), 1);
+        }
+        else{
+            values.put(GrabilityContract.Columnas.FAVORITA, 0);
+        }
+
+        resolver.update(existingUriPunto, values, null, null);
     }
 }

@@ -13,6 +13,7 @@ import android.content.OperationApplicationException;
 import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -26,9 +27,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.franciscogiraldo.fcog.grability.R;
-import com.franciscogiraldo.fcog.grability.provider.GrabilityContract;
+import com.franciscogiraldo.fcog.grability.db.App;
+import com.franciscogiraldo.fcog.grability.db.AppContentProvider;
+import com.franciscogiraldo.fcog.grability.db.AppDao;
+import com.franciscogiraldo.fcog.grability.db.DaoMaster;
+import com.franciscogiraldo.fcog.grability.db.DaoSession;
 import com.franciscogiraldo.fcog.grability.utils.Constantes;
-import com.franciscogiraldo.fcog.grability.web.App;
 import com.franciscogiraldo.fcog.grability.utils.VolleySingleton;
 
 import org.json.JSONArray;
@@ -50,6 +54,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
 
     ContentResolver resolver;
 
+    private SQLiteDatabase db;
+    private DaoMaster daoMaster;
+    private DaoSession daoSession;
+    private AppDao appDao;
 
     public SyncAdapter(Context context, boolean autoInitialize) {
         super(context, autoInitialize);
@@ -71,16 +79,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, final SyncResult syncResult) {
 
-        Log.i(TAG, "onPerformSync()...");
+        StartSyncProcess(syncResult);
 
-        realizarSincronizacionLocal(syncResult);
-
-        getContext().getContentResolver().notifyChange(GrabilityContract.CONTENT_URI1, null, false);
+        getContext().getContentResolver().notifyChange(AppContentProvider.CONTENT_URI, null, false);
     }
 
-    private void realizarSincronizacionLocal(final SyncResult syncResult) {
+    private void StartSyncProcess(final SyncResult syncResult) {
 
-        Log.i(TAG, "Actualizando el cliente.");
+        Log.i(TAG, "1. Starting sync process");
+        Log.i(TAG, "2. Fetching data to the server");
 
         JsonObjectRequest req = new JsonObjectRequest(
                 Request.Method.GET,
@@ -88,13 +95,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        actualizarDatosLocales(response, syncResult);
+                        ProcessFetchedData(response, syncResult);
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, error.toString());
+                        Log.d(TAG, "Sync Error: Fetching data error " + error.toString());
                     }
                 }
         );
@@ -112,35 +119,47 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
      * @param response   Respuesta en formato Json obtenida del servidor
      * @param syncResult Registros de la sincronización
      */
-    private void actualizarDatosLocales(JSONObject response, SyncResult syncResult) {
+    private void ProcessFetchedData(JSONObject response, SyncResult syncResult) {
 
-        JSONArray apps = null;
+        Log.i(TAG, "3. Processing fetched data");
+
+        List<App> appsList = new ArrayList<>();
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        List<App> data = new ArrayList<App>();
-
+        /**
+         * Parse apps data from JSON to POJO
+         */
         try {
-            // Obtener array "apps"
+            JSONArray apps = null;
             JSONObject feed  = response.getJSONObject("feed");
             apps = feed.getJSONArray("entry");
 
-            //Iterate the jsonArray
             for(int i=0; i < apps.length(); i++){
 
-                JSONObject appObject = apps.getJSONObject(i);
+                JSONObject appJSONObject = apps.getJSONObject(i);
 
-                int app_id = appObject.getJSONObject("id").getJSONObject("attributes").getInt("im:id");
-                String titulo = appObject.getJSONObject("title").getString("label");
-                String imagen = appObject.getJSONArray("im:image").getJSONObject(2).getString("label");
-                String descripcion = appObject.getJSONObject("summary").getString("label");
-                String categoria = appObject.getJSONObject("category").getJSONObject("attributes").getString("label");
-                String enlace = appObject.getJSONObject("link").getJSONObject("attributes").getString("href");
-                int precio = appObject.getJSONObject("im:price").getJSONObject("attributes").getInt("amount");
+                Long appId = appJSONObject.getJSONObject("id").getJSONObject("attributes").getLong("im:id");
+                String title = appJSONObject.getJSONObject("title").getString("label");
+                String image = appJSONObject.getJSONArray("im:image").getJSONObject(2).getString("label");
+                String description = appJSONObject.getJSONObject("summary").getString("label");
+                String category = appJSONObject.getJSONObject("category").getJSONObject("attributes").getString("label");
+                String link = appJSONObject.getJSONObject("link").getJSONObject("attributes").getString("href");
+                int price = appJSONObject.getJSONObject("im:price").getJSONObject("attributes").getInt("amount");
 
-                App app = new App(app_id, titulo, imagen, descripcion, categoria, enlace, precio);
+                App appObject = new App(
+                        appId,
+                        title,
+                        image,
+                        description,
+                        category,
+                        link,
+                        price,
+                        0,
+                        0
+                );
 
-                data.add(app);
+                appsList.add(appObject);
             }
 
         } catch (JSONException e) {
@@ -148,106 +167,155 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
             Toast.makeText(getContext(), getContext().getString(R.string.error_descargar_datos), Toast.LENGTH_LONG).show();
         }
 
+        /**
+         * ArrayList to store the syncing operations
+         */
+        ArrayList<ContentProviderOperation> opsList = new ArrayList<>();
 
-        // Lista para recolección de operaciones pendientes
-        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+        /**
+         * Store the apps data fetched from the server in a Hash Map
+         */
+        HashMap<String, App> AppsHashMap = new HashMap<>();
 
-        // Tabla hash para guardar las promociones recibidas del servidor
-        HashMap<String, App> AppsMapeo = new HashMap<String, App>();
-
-        for (App p : data) {
-            AppsMapeo.put(String.valueOf(p.app_id), p);
+        for (App app : appsList) {
+            AppsHashMap.put(String.valueOf(app.getId()), app);
         }
 
-        // Consultar registros locales actuales
-        Uri uri = GrabilityContract.CONTENT_URI1;
+        /**
+         * Connection to AppDao
+         */
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getContext(), "grability.db", null);
+        db = helper.getWritableDatabase();
 
-        String select = GrabilityContract.Columnas.APP_ID + " IS NOT NULL";
+        daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+        appDao = daoSession.getAppDao();
 
-        Cursor c = resolver.query(uri, Constantes.PROJECTION, select, null, null);
+        String idColumn = AppDao.Properties.Id.columnName;
+        String titleColumn = AppDao.Properties.Title.columnName;
+        String imageColumn = AppDao.Properties.Image.columnName;
+        String descriptionColumn = AppDao.Properties.Description.columnName;
+        String categoryColumn = AppDao.Properties.Category.columnName;
+        String linkColumn = AppDao.Properties.Link.columnName;
+        String priceColumn = AppDao.Properties.Price.columnName;
+        String newSyncColumn = AppDao.Properties.NewSync.columnName;
 
-        //quitar promociones nuevas anteriores
+        Uri appContentProviderUri = AppContentProvider.CONTENT_URI;
+
+        /**
+         * Update local apps data. Set all apps as NOT New.
+         */
+
         ContentValues values = new ContentValues();
-        values.put(GrabilityContract.Columnas.NUEVA, 0);
-        resolver.update(uri, values, null, null);
+        values.put(newSyncColumn, 0);
 
-        //assert c != null;
-        if (c==null) throw new AssertionError("Object cursor cannot be null");
+        resolver.update(appContentProviderUri, values, null, null);
 
-        Log.i(TAG, "Se encontraron " + c.getCount() + " registros locales.");
+        /**
+         * Get local apps data
+         */
+        String select = idColumn + " IS NOT NULL";
 
-        // Encontrar datos obsoletos
-        // se comparan los datos locales con los remotos. Si el mismo id de app es encontrado se checkea la fecha de actualización
-        // para hacer la respectiva actualizacion de la información
-        String app_id;
+        final String[] columns = new String[]{
+                idColumn
+        };
+
+        Cursor c = resolver.query(appContentProviderUri, columns, select, null, null);
+
+        if (c == null) throw new AssertionError("Sync Error: Fetching local data error, object cursor cannot be null");
+
+        Log.i(TAG, "Local app records found " + c.getCount());
+
+        /**
+         * Find obsolete local data
+         * Compares local and remote data
+         * If same app id is found then check modified date
+         * If app id not found then remove from local
+         */
+        String localAppId;
 
         while (c.moveToNext()) {
 
             syncResult.stats.numEntries++;
 
-            app_id = c.getString(Constantes.COLUMNA_APP_ID);
+            localAppId = c.getString(Constantes.COLUMNA_APP_ID);
 
-            App match = AppsMapeo.get(app_id);
+            App match = AppsHashMap.get(localAppId);
 
-            // La app existe en local pero no en remoto
+            /**
+             * App id not found then remove from local DB
+             */
             if (match == null) {
-                // Debido a que la entrada no existe, es removida de la base de datos
-                Uri deleteUriPromocion = GrabilityContract.CONTENT_URI1.buildUpon().appendPath(app_id).build();
+                Uri appContentProviderDeleteUri = appContentProviderUri.buildUpon().appendPath(localAppId).build();
 
-                Log.i(TAG, "Programando eliminación de: " + deleteUriPromocion);
-                ops.add(ContentProviderOperation.newDelete(deleteUriPromocion).build());
+                Log.i(TAG, "Programming app removal: " + localAppId);
+                opsList.add(ContentProviderOperation.newDelete(appContentProviderDeleteUri).build());
                 syncResult.stats.numDeletes++;
             }
         }
         c.close();
 
-        // Insertar las apps que no existen en local (los items del mapeado (AppsMapeo) restantes)
-        for (App p : AppsMapeo.values()) {
+        /**
+         * Add new remote apps data
+         */
+        for (App app : AppsHashMap.values()) {
 
-            Log.i(TAG, "Programando inserción de la app: " + p.app_id);
+            Log.i(TAG, "Programming app addition: " + app.getId());
 
-            ops.add(ContentProviderOperation.newInsert(GrabilityContract.CONTENT_URI1)
-                    .withValue(GrabilityContract.Columnas.APP_ID, p.app_id)
-                    .withValue(GrabilityContract.Columnas.TITULO, p.titulo)
-                    .withValue(GrabilityContract.Columnas.IMAGEN, p.imagen)
-                    .withValue(GrabilityContract.Columnas.DESCRIPCION, p.descripcion)
-                    .withValue(GrabilityContract.Columnas.CATEGORIA, p.categoria)
-                    .withValue(GrabilityContract.Columnas.ENLACE, p.enlace)
-                    .withValue(GrabilityContract.Columnas.PRECIO, p.precio)
-                    .withValue(GrabilityContract.Columnas.NUEVA, 1)
+            opsList.add(ContentProviderOperation.newInsert(appContentProviderUri)
+                    .withValue(idColumn, app.getId())
+                    .withValue(titleColumn, app.getTitle())
+                    .withValue(imageColumn, app.getImage())
+                    .withValue(descriptionColumn, app.getDescription())
+                    .withValue(categoryColumn, app.getCategory())
+                    .withValue(linkColumn, app.getLink())
+                    .withValue(priceColumn, app.getPrice())
+                    .withValue(newSyncColumn, 1)
                     .build());
+
             syncResult.stats.numInserts++;
         }
 
-        //Notificar sobre apps nuevas a excepcion de la 1era vez q se abre el app
-        if (AppsMapeo.size() > 0 && sharedPreferences.getBoolean(Constantes.CONFIG_NOTIFICACIONES, true) &&  !sharedPreferences.getBoolean(Constantes.PRIMERA_VEZ, true)) {
-            Notificaciones.despachar_notificaciones(new ArrayList<App>(AppsMapeo.values()));
-        }
+        /**
+         * Notify new apps except when the app is opened for the 1st time
+         */
+/*        if (AppsHashMap.size() > 0 &&
+                sharedPreferences.getBoolean(Constantes.CONFIG_NOTIFICACIONES, true) &&
+                !sharedPreferences.getBoolean(Constantes.FIRST_TIME, true)
+                ) {
+            Notifications.dispatch(new ArrayList<App>(AppsHashMap.values()));
+        }*/
 
-        //si hay algo para sincronizar
+        /**
+         * If there is data to sync
+         */
         if (syncResult.stats.numInserts > 0 || syncResult.stats.numUpdates > 0 || syncResult.stats.numDeletes > 0) {
 
-            Log.i(TAG, "Aplicando operaciones...");
+            Log.i(TAG, "Applying batch operation...");
 
             try {
-                resolver.applyBatch(GrabilityContract.AUTHORITY, ops);
+                resolver.applyBatch(AppContentProvider.AUTHORITY, opsList);
             } catch (RemoteException | OperationApplicationException e) {
                 e.printStackTrace();
             }
 
-            resolver.notifyChange(GrabilityContract.CONTENT_URI1, null, false);
+            resolver.notifyChange(appContentProviderUri, null, false);
 
-            Log.i(TAG, "Sincronización finalizada.");
+            Log.i(TAG, "Sync process ended.");
 
-            //si se descargaron los datos de sincronizacion se cambia la variable de 1era vez
-            sharedPreferences.edit().putBoolean(Constantes.PRIMERA_VEZ, false).apply();
+            /**
+             * If data was synchronized correctly then save in Preferences
+             */
+            sharedPreferences.edit().putBoolean(Constantes.FIRST_TIME, false).apply();
 
-            //notificar al splash screen que se descargaron los datos por 1era vez
+            /**
+             * Notify splash activity
+             */
             Intent i = new Intent(SYNC_FINISHED);
             getContext().sendBroadcast(i);
 
         } else {
-            Log.i(TAG, "No se requiere sincronización");
+            Log.i(TAG, "No sync required.");
         }
 
     }

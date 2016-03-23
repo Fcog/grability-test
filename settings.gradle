@@ -1,1 +1,1 @@
-include ':GrabilityTest'
+include ':GrabilityTest', ':greendao-generator'

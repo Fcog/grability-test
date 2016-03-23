@@ -90,10 +90,10 @@
 
         <!-- PROVIDER -->
         <provider
-            android:name="com.franciscogiraldo.fcog.grability.provider.GrabilityProvider"
-            android:authorities="@string/provider_authority"
+            android:name="com.franciscogiraldo.fcog.grability.db.AppContentProvider"
+            android:authorities="com.franciscogiraldo.fcog.grability.db.provider"
             android:exported="false"
-            android:syncable="true" />
+            android:syncable="true"/>
 
         <!-- SERVICIO DE AUTENTICACIÓN -->
         <service android:name="com.franciscogiraldo.fcog.grability.sync.AuthenticationService">

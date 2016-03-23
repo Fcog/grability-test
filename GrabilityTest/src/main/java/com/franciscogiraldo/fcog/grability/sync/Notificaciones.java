@@ -15,7 +15,7 @@ import android.util.Log;
 import com.franciscogiraldo.fcog.grability.ui.activity.AlertasActivity;
 import com.franciscogiraldo.fcog.grability.ui.activity.MainActivity;
 import com.franciscogiraldo.fcog.grability.utils.MyApplication;
-import com.franciscogiraldo.fcog.grability.web.App;
+import com.franciscogiraldo.fcog.grability.web.App2;
 import com.franciscogiraldo.fcog.grability.R;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class Notificaciones {
 
     private static final String NOTIFICATION_GROUP = "apps_nuevas";
 
-    public static void despachar_notificaciones(List<App> apps){
+    public static void despachar_notificaciones(List<App2> apps){
 
         int appsNuevas = apps.size();
 
@@ -47,7 +47,7 @@ public class Notificaciones {
      * Create and show a simple notification containing the received GCM message.
      *
      */
-    private static void sendMultipleNotification(List<App> apps) {
+    private static void sendMultipleNotification(List<App2> apps) {
 
         int total_apps = apps.size();
 
@@ -107,7 +107,7 @@ public class Notificaciones {
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 
-    private static void sendSimpleNotification(App app) {
+    private static void sendSimpleNotification(App2 app) {
 
         Intent intent = new Intent(application, AlertasActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
